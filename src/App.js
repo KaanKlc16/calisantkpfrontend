@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './Login';  // Login bileşeniniz
+import Yonetici from './Yonetici';  // Yönetici sayfası
+import Calisan from './Calisan';  // Çalışan sayfası
+import YoneticiTakip from './YoneticiTakip';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/Yonetici/Index" element={<Yonetici />} />
+        <Route path="/Calisan/Index" element={<Calisan />} />
+        <Route path="/Yonetici/Takip" element={<YoneticiTakip />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
