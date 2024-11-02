@@ -22,6 +22,7 @@ const YoneticiAta = () => {
     
         try {
             const response = await YoneticiService.IsEkle(formData);
+            console.log(response);
             setResult(response);
         } catch (error) {
             console.error('Görev eklenirken hata:', error);

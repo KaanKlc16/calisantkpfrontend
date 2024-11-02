@@ -18,7 +18,7 @@ const Calisan = () => {
     console.log("Personel ID:", personelId);
 
     if (personelId) {
-      YoneticiService.CalisanIsleriniGetir(personelId)
+      YoneticiService.CalisanIsleriniGetir(personelId) 
         .then(response => {
           setPersonelTasks(response);
         });
@@ -58,7 +58,7 @@ const Calisan = () => {
                 <h5 className="font-bold text-lg">{task.isBaslik}</h5>
                 <p className="text-gray-700">{task.isAciklama}</p>
                 <p className="text-sm text-gray-500">Başlangıç: {task.isBaslangicString}</p>
-                <p className="text-sm text-gray-500">Bitiş: {task.isBitirmeSure}</p>
+                <p className="text-sm text-gray-500">Bitiş: {task.isBitirmeString}</p>
               </li>
             ))}
           </ul>

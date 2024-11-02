@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const CalisanTamamla = () => {
   const [personelTasks, setPersonelTasks] = useState([]);
   const [kullaniciAd, setKullaniciAd] = useState('');
-  const [comments, setComments] = useState({}); //yorumlar buraya 
+  const [comments, setComments] = useState({}); 
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
@@ -25,12 +25,19 @@ const CalisanTamamla = () => {
   const handleCommentChange = (isId, comment) => {
     setComments(prevComments => ({ ...prevComments, [isId]: comment }));
   };
-
-  const handleCompleteTask = (isId) => {//buraya bi şekil 
+ 
+  const handleCompleteTask = (isId) => {
     const comment = comments[isId] || ""; 
-    YoneticiService.Tamamla(isId, comment)
+
+    let veri ={
+        isId : isId,
+        isYorum:"deneme"
+    };
+  console.log(veri);
+
+      YoneticiService.GorevDurumuDegistir(veri)
       .then(response => {
-        if (response.success) {
+        if (response.Sonuc) {
           setPersonelTasks(prevTasks => prevTasks.filter(task => task.isId !== isId));
           alert("Görev başarıyla tamamlandı!");
         } else {
@@ -65,7 +72,7 @@ const CalisanTamamla = () => {
                 <h5 className="text-xl font-bold text-blue-700 mb-2">{task.isBaslik}</h5>
                 <p className="text-gray-700 mb-2">{task.isAciklama}</p>
                 <p className="text-sm text-gray-500">Başlangıç: {task.isBaslangicString}</p>
-                <p className="text-sm text-gray-500 mb-4">Bitiş: {task.isBitirmeSure}</p>
+                <p className="text-sm text-gray-500 mb-4">Bitiş: {task.isBitirmeString}</p>
 
                 <input
                   type="text"
@@ -74,6 +81,8 @@ const CalisanTamamla = () => {
                   onChange={(e) => handleCommentChange(task.isId, e.target.value)}
                   className="w-full border border-gray-300 p-2 rounded-lg mb-4"
                 />
+                
+                //tamamla butonuna basınca modal açılsın yorum yazıp modalla güncelle 
 
                 <button
                   className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg transition"
