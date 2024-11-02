@@ -1,10 +1,33 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { LoginService } from './services';
 
 const Login = () => {
   const [kullaniciAd, setKullaniciAd] = useState('');
   const [parola, setParola] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const handleLogin2 = () => {
+    let veri = {
+      KullaniciAd: kullaniciAd,
+      Parola: parola
+    };
+    
+    LoginService.KullaniciGiris(veri)
+      .then(response => {
+        if (response.Sonuc.Sonuc) {
+          sessionStorage.setItem('kullaniciAd', response.Personel.personelKullaniciAd);
+          sessionStorage.setItem('personelAdSoyad', response.Personel.personelAdSoyad || '');
+          sessionStorage.setItem('personelId', response.Personel.personelId || '');
+          sessionStorage.setItem('personelBirimId', response.Personel.personelBirimId || '');
+          sessionStorage.setItem('personelYetkiTurId', response.Personel.personelYetkiTurId || '');
+
+          window.location.href = response.Url;
+        } else {
+          setErrorMessage(response.Sonuc.SonucAciklama);
+        }
+      });
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,15 +38,14 @@ const Login = () => {
         parola
       });
 
-      // Giriş başarılı ise session'da kullanıcı adını saklayın
       if (response.data.redirectUrl) {
-        sessionStorage.setItem('kullaniciAd', kullaniciAd); // Kullanıcı adını session'a kaydediyoruz
-        sessionStorage.setItem('personelAdSoyad', response.data.personelAdSoyad || ''); // Personel ad soyadını kaydediyoruz
-        sessionStorage.setItem('personelId', response.data.personelId || ''); // Personel ID'sini kaydediyoruz
-        sessionStorage.setItem('personelBirimId', response.data.personelBirimId || ''); // Personel Birim ID'sini kaydediyoruz
-        sessionStorage.setItem('personelYetkiTurId', response.data.personelYetkiTurId || ''); // Personel Yetki Tür ID'sini kaydediyoruz
+        sessionStorage.setItem('kullaniciAd', kullaniciAd);
+        sessionStorage.setItem('personelAdSoyad', response.data.personelAdSoyad || '');
+        sessionStorage.setItem('personelId', response.data.personelId || '');
+        sessionStorage.setItem('personelBirimId', response.data.personelBirimId || '');
+        sessionStorage.setItem('personelYetkiTurId', response.data.personelYetkiTurId || '');
 
-        window.location.href = response.data.redirectUrl; // Yönlendirme
+        window.location.href = response.data.redirectUrl;
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -35,10 +57,13 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-md rounded-lg p-8 w-96">
+        <h2 className="text-3xl font-semibold text-center text-blue-600 mb-6">Görev Takip Sistemi</h2>
+        <p className="text-center text-gray-600 mb-4">Hesabınıza giriş yapın</p>
+        
         <input
+          className="border border-gray-300 rounded-md p-2 w-full mb-4 focus:outline-none focus:border-blue-500"
           type="text"
           placeholder="Kullanıcı Adı"
           value={kullaniciAd}
@@ -46,15 +71,28 @@ const Login = () => {
           required
         />
         <input
+          className="border border-gray-300 rounded-md p-2 w-full mb-4 focus:outline-none focus:border-blue-500"
           type="password"
           placeholder="Parola"
           value={parola}
           onChange={(e) => setParola(e.target.value)}
           required
         />
-        <button type="submit">Giriş Yap</button>
-      </form>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        
+        <button
+          className="bg-blue-600 text-white w-full py-2 rounded-md font-semibold hover:bg-blue-700 transition duration-200"
+          onClick={handleLogin2}
+          type="button"
+        >
+          Giriş Yap
+        </button>
+
+        {errorMessage && <p className="mt-4 text-center text-red-600 font-medium">{errorMessage}</p>}
+        
+        <p className="text-center text-gray-500 mt-6 text-sm">
+          Şifrenizi mi unuttunuz? <a href="#" className="text-blue-600 hover:underline">Yardım Alın</a>
+        </p>
+      </div>
     </div>
   );
 };
